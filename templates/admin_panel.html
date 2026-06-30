@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Panel</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: white; }
+        .container { max-width: 800px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 1.8rem; margin: 20px 0; }
+        h2 { font-size: 1.2rem; margin: 20px 0 10px; color: #a0a0a0; }
+        .card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 20px; }
+        .match-result { display: flex; align-items: center; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        .match-label { min-width: 150px; }
+        .match-result select { padding: 10px 15px; border-radius: 8px; border: none; background: rgba(255,255,255,0.1); color: white; font-size: 1rem; }
+        .match-result select option { background: #1a1a2e; }
+        .btn { padding: 12px 25px; font-size: 1rem; border: none; border-radius: 50px; cursor: pointer; margin: 5px; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 12px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        th { color: #a0a0a0; font-weight: normal; }
+        .correct { color: #28a745; }
+        .incorrect { color: #dc3545; }
+        .top-bar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="top-bar">
+            <h1>🛠️ Admin Panel</h1>
+            <a href="/admin/logout" class="btn btn-secondary">Logout</a>
+        </div>
+        
+        <div class="card">
+            <h2>Set Match Results</h2>
+            <form method="POST">
+                <input type="hidden" name="action" value="set_results">
+                {% for match in matches %}
+                <div class="match-result">
+                    <span class="match-label">{{ match.home }} vs {{ match.away }}:</span>
+                    <select name="result_{{ match.id }}">
+                        <option value="">-- Not decided --</option>
+                        <option value="{{ match.home }}" {% if results.get(match.id|string) == match.home %}selected{% endif %}>{{ match.home }} wins</option>
+                        <option value="{{ match.away }}" {% if results.get(match.id|string) == match.away %}selected{% endif %}>{{ match.away }} wins</option>
+                    </select>
+                </div>
+                {% endfor %}
+                <button type="submit" class="btn btn-primary">Save Results</button>
+            </form>
+        </div>
+        
+        <div class="card">
+            <h2>All Predictions ({{ predictions|length }} players)</h2>
+            {% if scores %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Player</th>
+                        {% for match in matches %}
+                        <th>{{ match.home[:3] }} v {{ match.away[:3] }}</th>
+                        {% endfor %}
+                        <th>Score</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for player in scores %}
+                    <tr>
+                        <td><strong>{{ player.name }}</strong></td>
+                        {% for match in matches %}
+                        <td>
+                            {% set pick = player.picks.get(match.id|string, '-') %}
+                            {% set result = results.get(match.id|string) %}
+                            {% if result %}
+                                {% if pick == result %}
+                                <span class="correct">✓ {{ pick }}</span>
+                                {% else %}
+                                <span class="incorrect">✗ {{ pick }}</span>
+                                {% endif %}
+                            {% else %}
+                                {{ pick }}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                        <td><strong>{{ player.score }}/4</strong></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <p>No predictions yet.</p>
+            {% endif %}
+        </div>
+        
+        <div class="card">
+            <h2>⚠️ Danger Zone</h2>
+            <form method="POST" onsubmit="return confirm('Are you sure? This will delete ALL predictions and results!');">
+                <input type="hidden" name="action" value="clear_all">
+                <button type="submit" class="btn btn-danger">Clear All Data</button>
+            </form>
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/leaderboard" class="btn btn-secondary">View Public Leaderboard</a>
+            <a href="/" class="btn btn-secondary">View Home Page</a>
+        </div>
+    </div>
+</body>
+</html>
