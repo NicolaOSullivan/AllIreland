@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaderboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: white; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 2rem; margin: 20px 0; text-align: center; }
+        .results-bar { background: rgba(255,255,255,0.05); border-radius: 10px; padding: 15px; margin-bottom: 20px; }
+        .results-bar h3 { margin-bottom: 10px; font-size: 0.9rem; color: #a0a0a0; }
+        .result-item { display: inline-block; background: rgba(102, 126, 234, 0.3); padding: 5px 12px; border-radius: 20px; margin: 3px; font-size: 0.85rem; }
+        .result-pending { background: rgba(255,255,255,0.1); }
+        .leaderboard { background: rgba(255,255,255,0.05); border-radius: 15px; overflow: hidden; }
+        .leader-row { display: flex; align-items: center; padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .leader-row:last-child { border-bottom: none; }
+        .rank { width: 40px; font-size: 1.5rem; }
+        .rank-1 { color: gold; }
+        .rank-2 { color: silver; }
+        .rank-3 { color: #cd7f32; }
+        .player-name { flex: 1; font-weight: 600; }
+        .player-score { font-size: 1.2rem; color: #667eea; }
+        .empty-state { text-align: center; padding: 40px; color: #a0a0a0; }
+        .btn { display: inline-block; padding: 12px 30px; font-size: 1rem; border: none; border-radius: 50px; cursor: pointer; text-decoration: none; background: rgba(255,255,255,0.1); color: white; margin-top: 20px; }
+        .btn:hover { background: rgba(255,255,255,0.15); }
+    </style>
+    <meta http-equiv="refresh" content="30">
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Leaderboard</h1>
+        
+        <div class="results-bar">
+            <h3>Results</h3>
+            {% for match in matches %}
+                {% if results.get(match.id|string) %}
+                <span class="result-item">{{ match.home }} vs {{ match.away }}: <strong>{{ results.get(match.id|string) }}</strong></span>
+                {% else %}
+                <span class="result-item result-pending">{{ match.home }} vs {{ match.away }}: Pending</span>
+                {% endif %}
+            {% endfor %}
+        </div>
+        
+        <div class="leaderboard">
+            {% if scores %}
+                {% for player in scores %}
+                <div class="leader-row">
+                    <div class="rank {% if loop.index == 1 %}rank-1{% elif loop.index == 2 %}rank-2{% elif loop.index == 3 %}rank-3{% endif %}">
+                        {% if loop.index == 1 %}🥇{% elif loop.index == 2 %}🥈{% elif loop.index == 3 %}🥉{% else %}{{ loop.index }}{% endif %}
+                    </div>
+                    <div class="player-name">{{ player.name }}</div>
+                    <div class="player-score">{{ player.score }}/4</div>
+                </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <p>No predictions yet!</p>
+                    <a href="/play" class="btn">Be the first to play</a>
+                </div>
+            {% endif %}
+        </div>
+        
+        <div style="text-align: center; margin-top: 20px;">
+            <a href="/" class="btn">← Back to Home</a>
+        </div>
+    </div>
+</body>
+</html>
