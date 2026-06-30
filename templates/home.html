@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Match Predictions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: white; }
+        .container { max-width: 600px; margin: 0 auto; padding: 20px; text-align: center; }
+        h1 { font-size: 2.5rem; margin: 40px 0 20px; }
+        .emoji { font-size: 4rem; margin-bottom: 20px; }
+        .subtitle { color: #a0a0a0; margin-bottom: 40px; font-size: 1.1rem; }
+        .btn { display: inline-block; padding: 15px 40px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; text-decoration: none; margin: 10px; transition: transform 0.2s, box-shadow 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; }
+        .btn-secondary { background: rgba(255,255,255,0.1); color: white; border: 2px solid rgba(255,255,255,0.3); }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .matches-preview { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin: 30px 0; text-align: left; }
+        .match-item { padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .match-item:last-child { border-bottom: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="emoji">🏆</div>
+        <h1>Match Predictions</h1>
+        <p class="subtitle">Pick your winners and compete with others!</p>
+        
+        <div class="matches-preview">
+            <h3 style="margin-bottom: 15px;">Today's Matches</h3>
+            <div class="match-item">🔴 Cork vs Galway 🟡</div>
+            <div class="match-item">💚 Limerick vs Clare 💛</div>
+            <div class="match-item">💚 Mayo vs Louth ❤️</div>
+            <div class="match-item">💚 Kerry vs Dublin 💙</div>
+        </div>
+        
+        <a href="/play" class="btn btn-primary">Play Now</a>
+        <a href="/leaderboard" class="btn btn-secondary">Leaderboard</a>
+    </div>
+</body>
+</html>
