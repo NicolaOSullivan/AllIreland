@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Make Your Predictions</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%); min-height: 100vh; color: white; }
+        .container { max-width: 500px; margin: 0 auto; padding: 20px; }
+        h1 { font-size: 1.8rem; margin: 20px 0; text-align: center; }
+        .welcome { text-align: center; color: #a0a0a0; margin-bottom: 30px; }
+        .match-card { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 20px; margin-bottom: 15px; }
+        .match-title { text-align: center; font-size: 0.9rem; color: #a0a0a0; margin-bottom: 15px; }
+        .match-options { display: flex; gap: 10px; }
+        .option { flex: 1; }
+        .option input { display: none; }
+        .option label { display: block; padding: 15px; text-align: center; background: rgba(255,255,255,0.1); border-radius: 10px; cursor: pointer; transition: all 0.2s; font-weight: 600; }
+        .option input:checked + label { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); transform: scale(1.02); }
+        .option label:hover { background: rgba(255,255,255,0.15); }
+        .btn { display: block; width: 100%; padding: 15px; font-size: 1.2rem; border: none; border-radius: 50px; cursor: pointer; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; margin-top: 20px; }
+        .btn:hover { transform: translateY(-2px); box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .error { background: rgba(255,0,0,0.2); padding: 10px; border-radius: 10px; margin-bottom: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🏆 Make Your Picks</h1>
+        <p class="welcome">Playing as <strong>{{ name }}</strong></p>
+        
+        {% if error %}
+        <div class="error">{{ error }}</div>
+        {% endif %}
+        
+        <form method="POST">
+            {% for match in matches %}
+            <div class="match-card">
+                <div class="match-title">Match {{ match.id }}</div>
+                <div class="match-options">
+                    <div class="option">
+                        <input type="radio" name="match_{{ match.id }}" id="match_{{ match.id }}_home" value="{{ match.home }}">
+                        <label for="match_{{ match.id }}_home">{{ match.home }}</label>
+                    </div>
+                    <div class="option">
+                        <input type="radio" name="match_{{ match.id }}" id="match_{{ match.id }}_away" value="{{ match.away }}">
+                        <label for="match_{{ match.id }}_away">{{ match.away }}</label>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+            
+            <button type="submit" class="btn">Submit Predictions</button>
+        </form>
+    </div>
+</body>
+</html>
